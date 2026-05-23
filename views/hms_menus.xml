@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Top-level menu (appears in the main app bar) ── -->
+    <menuitem id="menu_hms_root"
+              name="HMS"
+              sequence="10"/>
+
+    <!-- ── First sub-menu group ── -->
+    <menuitem id="menu_hms_patients_main"
+              name="Patients"
+              parent="menu_hms_root"
+              sequence="10"/>
+
+    <!-- ── Leaf menu → opens the patient list ── -->
+    <menuitem id="menu_hms_patients"
+              name="All Patients"
+              parent="menu_hms_patients_main"
+              action="action_hms_patient"
+              sequence="10"/>
+
+</odoo>

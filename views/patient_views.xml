@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- LIST VIEW -->
+    <record id="view_hms_patient_list" model="ir.ui.view">
+        <field name="name">hms.patient.list</field>
+        <field name="model">hms.patient</field>
+        <field name="arch" type="xml">
+            <list string="Patients">
+                <field name="first_name"/>
+                <field name="last_name"/>
+                <field name="birth_date"/>
+                <field name="age"/>
+                <field name="blood_type"/>
+                <field name="pcr"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_hms_patient_form" model="ir.ui.view">
+        <field name="name">hms.patient.form</field>
+        <field name="model">hms.patient</field>
+        <field name="arch" type="xml">
+            <form string="Patient">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="first_name" string="Patient Name"/>
+                        <h1>
+                            <field name="first_name" placeholder="First Name"/>
+                            <field name="last_name" placeholder="Last Name"/>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page string="Personal Info">
+                            <group>
+                                <group string="Basic Details">
+                                    <field name="birth_date"/>
+                                    <field name="age" readonly="1"/>
+                                    <field name="address"/>
+                                </group>
+                                <group string="Medical Details">
+                                    <field name="blood_type"/>
+                                    <field name="cr_ratio"/>
+                                    <field name="pcr"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Medical History">
+                            <field name="history" widget="html"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_hms_patient_search" model="ir.ui.view">
+        <field name="name">hms.patient.search</field>
+        <field name="model">hms.patient</field>
+        <field name="arch" type="xml">
+            <search string="Search Patients">
+                <field name="first_name"/>
+                <field name="last_name"/>
+                <field name="blood_type"/>
+                <filter string="PCR Positive" name="pcr_positive" domain="[('pcr','=',True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_hms_patient" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">hms.patient</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
