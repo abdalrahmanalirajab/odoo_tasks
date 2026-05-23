@@ -9,10 +9,10 @@
             <list string="Patients">
                 <field name="first_name"/>
                 <field name="last_name"/>
-                <field name="birth_date"/>
                 <field name="age"/>
                 <field name="blood_type"/>
                 <field name="pcr"/>
+                <field name="state"/>
             </list>
         </field>
     </record>
@@ -29,9 +29,14 @@
                         <label for="first_name" string="Patient Name"/>
                         <h1>
                             <field name="first_name" placeholder="First Name"/>
-                            <field name="last_name" placeholder="Last Name"/>
+                            <field name="last_name"  placeholder="Last Name"/>
                         </h1>
                     </div>
+
+                    <!-- State bar -->
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="undetermined,good,fair,serious"/>
+
                     <notebook>
                         <page string="Personal Info">
                             <group>
@@ -39,17 +44,39 @@
                                     <field name="birth_date"/>
                                     <field name="age" readonly="1"/>
                                     <field name="address"/>
+                                    <field name="blood_type"/>
                                 </group>
                                 <group string="Medical Details">
-                                    <field name="blood_type"/>
-                                    <field name="cr_ratio"/>
                                     <field name="pcr"/>
+                                    <field name="cr_ratio"
+                                           required="pcr"/>
+                                    <field name="department_id"
+                                           domain="[('is_opened','=',True)]"/>
+                                    <field name="department_capacity" readonly="1"/>
+                                    <field name="doctor_ids"
+                                           widget="many2many_tags"
+                                           readonly="not department_id"/>
                                 </group>
                             </group>
                         </page>
-                        <page string="Medical History">
+
+                        <!-- History tab: hidden if age < 50 -->
+                        <page string="Medical History"
+                              invisible="age &lt; 50">
                             <field name="history" widget="html"/>
                         </page>
+
+                        <!-- Log History tab -->
+                        <page string="Log History">
+                            <field name="log_ids">
+                                <list>
+                                    <field name="created_by"/>
+                                    <field name="date"/>
+                                    <field name="description"/>
+                                </list>
+                            </field>
+                        </page>
+
                     </notebook>
                 </sheet>
             </form>
@@ -65,7 +92,8 @@
                 <field name="first_name"/>
                 <field name="last_name"/>
                 <field name="blood_type"/>
-                <filter string="PCR Positive" name="pcr_positive" domain="[('pcr','=',True)]"/>
+                <filter string="PCR Positive" name="pcr_positive"
+                        domain="[('pcr','=',True)]"/>
             </search>
         </field>
     </record>
