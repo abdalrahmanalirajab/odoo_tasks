@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Top-level menu -->
-    <menuitem id="menu_hms_root" name="HMS" sequence="10"/>
+    <menuitem id="menu_hms_root"
+              name="HMS"
+              sequence="10"/>
 
     <!-- Patients -->
-    <menuitem id="menu_hms_patients_main" name="Patients"
-              parent="menu_hms_root" sequence="10"/>
-    <menuitem id="menu_hms_patients" name="All Patients"
-              parent="menu_hms_patients_main"
-              action="action_hms_patient" sequence="10"/>
+    <menuitem id="menu_hms_patients"
+              name="Patients"
+              parent="menu_hms_root"
+              action="action_hms_patient"
+              sequence="10"/>
 
     <!-- Departments -->
-    <menuitem id="menu_hms_departments_main" name="Departments"
-              parent="menu_hms_root" sequence="20"/>
-    <menuitem id="menu_hms_departments" name="All Departments"
-              parent="menu_hms_departments_main"
-              action="action_hms_department" sequence="10"/>
+    <menuitem id="menu_hms_departments"
+              name="Departments"
+              parent="menu_hms_root"
+              action="action_hms_department"
+              sequence="20"/>
 
     <!-- Doctors -->
-    <menuitem id="menu_hms_doctors_main" name="Doctors"
-              parent="menu_hms_root" sequence="30"/>
-    <menuitem id="menu_hms_doctors" name="All Doctors"
-              parent="menu_hms_doctors_main"
-              action="action_hms_doctors" sequence="10"/>
+    <menuitem id="menu_hms_doctors"
+              name="Doctors"
+              parent="menu_hms_root"
+              action="action_hms_doctors"
+              sequence="30"/>
 
 </odoo>

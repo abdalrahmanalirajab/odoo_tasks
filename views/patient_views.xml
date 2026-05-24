@@ -5,14 +5,18 @@
     <record id="view_hms_patient_list" model="ir.ui.view">
         <field name="name">hms.patient.list</field>
         <field name="model">hms.patient</field>
+
         <field name="arch" type="xml">
             <list string="Patients">
+
                 <field name="first_name"/>
                 <field name="last_name"/>
                 <field name="age"/>
                 <field name="blood_type"/>
                 <field name="pcr"/>
                 <field name="state"/>
+                <field name="department_id"/>
+
             </list>
         </field>
     </record>
@@ -21,65 +25,107 @@
     <record id="view_hms_patient_form" model="ir.ui.view">
         <field name="name">hms.patient.form</field>
         <field name="model">hms.patient</field>
+
         <field name="arch" type="xml">
+
             <form string="Patient">
+
                 <sheet>
-                    <field name="image" widget="image" class="oe_avatar"/>
+
+                    <field name="image"
+                           widget="image"
+                           class="oe_avatar"/>
+
                     <div class="oe_title">
-                        <label for="first_name" string="Patient Name"/>
+
+                        <label for="first_name"
+                               string="Patient Name"/>
+
                         <h1>
-                            <field name="first_name" placeholder="First Name"/>
-                            <field name="last_name"  placeholder="Last Name"/>
+                            <field name="first_name"/>
+                            <field name="last_name"/>
                         </h1>
+
                     </div>
 
-                    <!-- State bar -->
-                    <field name="state" widget="statusbar"
+                    <field name="state"
+                           widget="statusbar"
                            statusbar_visible="undetermined,good,fair,serious"/>
 
                     <notebook>
+
                         <page string="Personal Info">
+
                             <group>
+
                                 <group string="Basic Details">
+
                                     <field name="birth_date"/>
-                                    <field name="age" readonly="1"/>
+
+                                    <field name="age"
+                                           readonly="1"/>
+
                                     <field name="address"/>
+
                                     <field name="blood_type"/>
+
                                 </group>
+
                                 <group string="Medical Details">
+
                                     <field name="pcr"/>
+
                                     <field name="cr_ratio"
                                            required="pcr"/>
+
                                     <field name="department_id"
                                            domain="[('is_opened','=',True)]"/>
-                                    <field name="department_capacity" readonly="1"/>
+
+                                    <field name="department_capacity"
+                                           readonly="1"/>
+
                                     <field name="doctor_ids"
                                            widget="many2many_tags"
                                            readonly="not department_id"/>
+
                                 </group>
+
                             </group>
+
                         </page>
 
-                        <!-- History tab: hidden if age < 50 -->
                         <page string="Medical History"
                               invisible="age &lt; 50">
-                            <field name="history" widget="html"/>
+
+                            <field name="history"
+                                   widget="html"/>
+
                         </page>
 
-                        <!-- Log History tab -->
                         <page string="Log History">
+
                             <field name="log_ids">
-                                <list>
-                                    <field name="created_by"/>
+
+                                <list create="false"
+                                      delete="false"
+                                      edit="false">
+
                                     <field name="date"/>
+                                    <field name="created_by"/>
                                     <field name="description"/>
+
                                 </list>
+
                             </field>
+
                         </page>
 
                     </notebook>
+
                 </sheet>
+
             </form>
+
         </field>
     </record>
 
@@ -87,22 +133,46 @@
     <record id="view_hms_patient_search" model="ir.ui.view">
         <field name="name">hms.patient.search</field>
         <field name="model">hms.patient</field>
+
         <field name="arch" type="xml">
+
             <search string="Search Patients">
+
                 <field name="first_name"/>
                 <field name="last_name"/>
                 <field name="blood_type"/>
-                <filter string="PCR Positive" name="pcr_positive"
+
+                <filter string="PCR Positive"
+                        name="pcr_positive"
                         domain="[('pcr','=',True)]"/>
+
+                <group expand="0" string="Group By">
+
+                    <filter string="State"
+                            name="group_state"
+                            context="{'group_by': 'state'}"/>
+
+                    <filter string="Department"
+                            name="group_department"
+                            context="{'group_by': 'department_id'}"/>
+
+                </group>
+
             </search>
+
         </field>
     </record>
 
     <!-- ACTION -->
-    <record id="action_hms_patient" model="ir.actions.act_window">
+    <record id="action_hms_patient"
+            model="ir.actions.act_window">
+
         <field name="name">Patients</field>
+
         <field name="res_model">hms.patient</field>
+
         <field name="view_mode">list,form</field>
+
     </record>
 
 </odoo>
