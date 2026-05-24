@@ -7,3 +7,5 @@ class HmsDoctors(models.Model):
     first_name = fields.Char(string='First Name', required=True)
     last_name  = fields.Char(string='Last Name',  required=True)
     image      = fields.Image(string='Doctor Image')
+
+
