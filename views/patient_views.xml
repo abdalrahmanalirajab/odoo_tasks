@@ -1,178 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- LIST VIEW -->
+    <!-- Patient List View -->
     <record id="view_hms_patient_list" model="ir.ui.view">
         <field name="name">hms.patient.list</field>
         <field name="model">hms.patient</field>
-
         <field name="arch" type="xml">
             <list string="Patients">
-
                 <field name="first_name"/>
                 <field name="last_name"/>
+                <field name="email"/>
                 <field name="age"/>
                 <field name="blood_type"/>
                 <field name="pcr"/>
                 <field name="state"/>
                 <field name="department_id"/>
-
             </list>
         </field>
     </record>
 
-    <!-- FORM VIEW -->
+    <!-- Patient Form View -->
     <record id="view_hms_patient_form" model="ir.ui.view">
         <field name="name">hms.patient.form</field>
         <field name="model">hms.patient</field>
-
         <field name="arch" type="xml">
-
             <form string="Patient">
-
+                <header>
+                    <button name="action_set_good" type="object" string="Good"
+                        class="btn-success" invisible="state == 'good'"/>
+                    <button name="action_set_fair" type="object" string="Fair"
+                        class="btn-warning" invisible="state == 'fair'"/>
+                    <button name="action_set_serious" type="object" string="Serious"
+                        class="btn-danger" invisible="state == 'serious'"/>
+                    <button name="action_reset_state" type="object" string="Reset"
+                        invisible="state == 'undetermined'"/>
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="undetermined,good,fair,serious"/>
+                </header>
                 <sheet>
-
-                    <field name="image"
-                           widget="image"
-                           class="oe_avatar"/>
-
-                    <div class="oe_title">
-
-                        <label for="first_name"
-                               string="Patient Name"/>
-
-                        <h1>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <group>
+                        <!-- Group 1: Personal Info -->
+                        <group string="Personal Info">
                             <field name="first_name"/>
                             <field name="last_name"/>
-                        </h1>
-
-                    </div>
-
-                    <field name="state"
-                           widget="statusbar"
-                           statusbar_visible="undetermined,good,fair,serious"/>
-
+                            <field name="birth_date"/>
+                            <field name="age" readonly="1"/>
+                            <field name="email"/>
+                            <field name="address"/>
+                        </group>
+                        <!-- Group 2: Medical Info -->
+                        <group string="Medical Info">
+                            <field name="blood_type"/>
+                            <field name="pcr"/>
+                            <field name="cr_ratio" required="pcr"/>
+                            <!-- Hidden when age &lt; 50 -->
+                            <field name="history" invisible="age &lt; 50"/>
+                        </group>
+                    </group>
+                    <!-- Group 3: Assignment -->
+                    <group string="Assignment">
+                        <group>
+                            <field name="department_id"
+                                domain="[('is_opened', '=', True)]"/>
+                            <field name="department_capacity" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="doctor_ids" widget="many2many_tags"
+                                readonly="not department_id"
+                                domain="[('department_id', '=', department_id)]"/>
+                        </group>
+                    </group>
                     <notebook>
-
-                        <page string="Personal Info">
-
-                            <group>
-
-                                <group string="Basic Details">
-
-                                    <field name="birth_date"/>
-
-                                    <field name="age"
-                                           readonly="1"/>
-
-                                    <field name="address"/>
-
-                                    <field name="blood_type"/>
-
-                                </group>
-
-                                <group string="Medical Details">
-
-                                    <field name="pcr"/>
-
-                                    <field name="cr_ratio"
-                                           required="pcr"/>
-
-                                    <field name="department_id"
-                                           domain="[('is_opened','=',True)]"/>
-
-                                    <field name="department_capacity"
-                                           readonly="1"/>
-
-                                    <field name="doctor_ids"
-                                           widget="many2many_tags"
-                                           readonly="not department_id"/>
-
-                                </group>
-
-                            </group>
-
-                        </page>
-
-                        <page string="Medical History"
-                              invisible="age &lt; 50">
-
-                            <field name="history"
-                                   widget="html"/>
-
-                        </page>
-
+                        <!-- Log History tab -->
                         <page string="Log History">
-
-                            <field name="log_ids">
-
-                                <list create="false"
-                                      delete="false"
-                                      edit="false">
-
-                                    <field name="date"/>
+                            <field name="log_history_ids" readonly="1">
+                                <list create="false" edit="false" delete="false">
                                     <field name="created_by"/>
+                                    <field name="date"/>
                                     <field name="description"/>
-
                                 </list>
-
                             </field>
-
                         </page>
-
                     </notebook>
-
                 </sheet>
-
             </form>
-
         </field>
     </record>
 
-    <!-- SEARCH VIEW -->
+    <!-- Patient Search View -->
     <record id="view_hms_patient_search" model="ir.ui.view">
         <field name="name">hms.patient.search</field>
         <field name="model">hms.patient</field>
-
         <field name="arch" type="xml">
-
             <search string="Search Patients">
-
                 <field name="first_name"/>
                 <field name="last_name"/>
+                <field name="email"/>
                 <field name="blood_type"/>
+                <field name="department_id"/>
 
-                <filter string="PCR Positive"
-                        name="pcr_positive"
-                        domain="[('pcr','=',True)]"/>
+                <filter string="Undetermined" name="state_undetermined"
+                    domain="[('state', '=', 'undetermined')]"/>
+                <filter string="Good" name="state_good"
+                    domain="[('state', '=', 'good')]"/>
+                <filter string="Fair" name="state_fair"
+                    domain="[('state', '=', 'fair')]"/>
+                <filter string="Serious" name="state_serious"
+                    domain="[('state', '=', 'serious')]"/>
+                <separator/>
+                <filter string="Blood Type A+" name="blood_a_pos"
+                    domain="[('blood_type', '=', 'A+')]"/>
+                <filter string="Blood Type O+" name="blood_o_pos"
+                    domain="[('blood_type', '=', 'O+')]"/>
+                <filter string="PCR Positive" name="pcr_positive"
+                    domain="[('pcr', '=', True)]"/>
 
-                <group expand="0" string="Group By">
-
-                    <filter string="State"
-                            name="group_state"
-                            context="{'group_by': 'state'}"/>
-
-                    <filter string="Department"
-                            name="group_department"
-                            context="{'group_by': 'department_id'}"/>
-
+                <group>
+                    <filter string="Department" name="group_department"
+                        context="{'group_by': 'department_id'}"/>
+                    <filter string="State" name="group_state"
+                        context="{'group_by': 'state'}"/>
+                    <filter string="Blood Type" name="group_blood_type"
+                        context="{'group_by': 'blood_type'}"/>
                 </group>
-
             </search>
-
         </field>
     </record>
 
-    <!-- ACTION -->
-    <record id="action_hms_patient"
-            model="ir.actions.act_window">
-
+    <record id="action_hms_patient" model="ir.actions.act_window">
         <field name="name">Patients</field>
-
         <field name="res_model">hms.patient</field>
-
         <field name="view_mode">list,form</field>
-
+        <field name="search_view_id" ref="view_hms_patient_search"/>
     </record>
 
 </odoo>

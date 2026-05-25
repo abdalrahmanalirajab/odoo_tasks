@@ -1,5 +1,5 @@
 from . import patient
 from . import department
-from . import doctors
-from . import patient_log
-
+from . import doctor
+from . import log_history
+from . import  res_partner
