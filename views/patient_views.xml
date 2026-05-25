@@ -68,7 +68,8 @@
                         <group>
                             <field name="doctor_ids" widget="many2many_tags"
                                 readonly="not department_id"
-                                domain="[('department_id', '=', department_id)]"/>
+                                domain="[('department_id', '=', department_id)]"
+                                groups="hms.group_hms_manager"/>
                         </group>
                     </group>
                     <notebook>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<<odoo>
+
+    <template id="report_patient_status">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <h2 class="text-center mb-4">Patient Status Report</h2>
+
+                        <div class="row">
+                            <!-- Patient Image -->
+                            <div class="col-3">
+                                <img t-if="o.image" 
+                                     t-att-src="image_data_uri(o.image)" 
+                                     style="max-height: 140px; max-width: 100%; border: 1px solid #ccc; padding: 4px;"/>
+                            </div>
+
+                            <!-- Patient Details -->
+                            <div class="col-9">
+                                <table class="table table-borderless table-sm">
+                                    <tr>
+                                        <td style="width: 140px;"><strong>Name:</strong></td>
+                                        <td><t t-esc="o.first_name"/> <t t-esc="o.last_name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Age:</strong></td>
+                                        <td><t t-esc="o.age"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Department:</strong></td>
+                                        <td><t t-esc="o.department_id.name or '—'"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Doctors:</strong></td>
+                                        <td>
+                                            <t t-if="o.doctor_ids">
+                                                <t t-esc="', '.join(o.doctor_ids.mapped('name'))"/>
+                                            </t>
+                                            <t t-else="">—</t>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Birth Date:</strong></td>
+                                        <td><t t-esc="o.birth_date"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PCR:</strong></td>
+                                        <td><t t-esc="o.cr_ratio"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Blood Type:</strong></td>
+                                        <td><t t-esc="o.blood_type"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Email:</strong></td>
+                                        <td><t t-esc="o.email"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Log History -->
+                        <h4 class="mt-4">Log History</h4>
+                        <table class="table table-bordered table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>User</th>
+                                    <th>Date</th>
+                                    <th>Info</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.log_ids" t-as="log">
+                                    <td><t t-esc="log.created_by.name"/></td>
+                                    <td><t t-esc="log.date"/></td>
+                                    <td><t t-esc="log.description"/></td>
+                                </tr>
+                                <tr t-if="not o.log_ids">
+                                    <td colspan="3" class="text-center text-muted">No log history.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
